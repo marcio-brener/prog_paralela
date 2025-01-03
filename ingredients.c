@@ -1,4 +1,8 @@
-#include "ingredients.h" 
+#include "ingredients.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 #define MAX_LINE_LENGTH 1024
 
