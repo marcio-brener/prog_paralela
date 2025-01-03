@@ -1,10 +1,5 @@
 #include "./helpers/ingredients.h"
 
-typedef struct {
-    char *value;
-    int count;
-} IngredientCount;
-
 int main() {
     FILE *file = fopen("test_dataset02.csv", "r");
     if (file == NULL) {
