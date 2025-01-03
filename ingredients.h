@@ -1,3 +1,6 @@
+#ifndef INGREDIENTS_H
+#define INGREDIENTS_H
+
 typedef struct {
     char *value;
     int count;
@@ -9,3 +12,5 @@ void remove_quotes_and_brackets(char *str);
 void extract_ingredients(char *line, IngredientCount ***ingredients, int *ingredients_size);
 void sort_ingredients(IngredientCount **ingredients, int size);
 void print_biggest_three_ingredients(IngredientCount **ingredients);
+
+#endif
