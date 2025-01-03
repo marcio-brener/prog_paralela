@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <mpi.h>
-#include "./helpers/ingredients.h"
+#include "ingredients.h"
 
 #define MAX_LINE_LENGTH 1024
 
@@ -15,7 +15,6 @@ int main(int argc, char *argv[]) {
     int lines_per_process, start_line, end_line;
     int local_count = 0, global_count = 0;
 
-    // Inicializa o MPI
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -61,7 +60,7 @@ int main(int argc, char *argv[]) {
 
         printf("O ingrediente '%s' apareceu %d vezes no arquivo.\n", ingredient, global_count);
     }
-    
+
     MPI_Finalize();
     return 0;
 }
