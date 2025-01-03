@@ -32,8 +32,8 @@ int count_ingredient_in_lines(FILE *file, const char *ingredient, int start_line
 int main(int argc, char *argv[]) {
     int rank, size;
     FILE *file;
-    const char *filename = "full_dataset.csv";
-    const char *ingredient = "chocolate";  // Ingrediente a ser contado
+    const char *filename = "test_dataset02.csv";
+    const char *ingredient = "vanila";  // Ingrediente a ser contado
     int total_lines = 0;
     int lines_per_process, start_line, end_line;
     int local_count = 0, global_count = 0;
