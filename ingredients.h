@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <mpi.h>
+
 #ifndef INGREDIENTS_H
 #define INGREDIENTS_H
 
