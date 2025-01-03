@@ -1,8 +1,8 @@
+#include "ingredients.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "./helpers/ingredients.h"
 
 typedef struct {
     char *value;
