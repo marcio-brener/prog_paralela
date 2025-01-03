@@ -2,11 +2,6 @@
 
 #define MAX_LINE_LENGTH 1024
 
-typedef struct {
-    char *value;
-    int count;
-} IngredientCount;
-
 int count_ingredient_in_lines(FILE *file, const char *ingredient, int start_line, int end_line) {
     char line[MAX_LINE_LENGTH];
     int count = 0;
