@@ -24,31 +24,46 @@ int count_ingredient_in_lines(FILE *file, const char *ingredient, int start_line
 }
 
 int find_or_add(IngredientCount ***ingredients, int *ingredients_size, const char *ingredient) {
+    // Verificar se o ingrediente já existe
     for (int i = 0; i < *ingredients_size; i++) {
         if (strcmp((*ingredients)[i]->value, ingredient) == 0) {
             (*ingredients)[i]->count++;
-            return 1;
+            return 1; // Ingrediente encontrado e atualizado
         }
     }
 
-    *ingredients_size += 1;
-    *ingredients = realloc(*ingredients, (*ingredients_size) * sizeof(IngredientCount *));
-    if (*ingredients == NULL) {
+    // Tentar realocar memória para mais um elemento
+    IngredientCount **temp = realloc(*ingredients, (*ingredients_size + 1) * sizeof(IngredientCount *));
+    if (temp == NULL) {
         printf("Erro ao alocar memória para os ingredientes!\n");
-        return -1;
+        return -1; // Falha ao realocar memória
     }
-    
-    (*ingredients)[*ingredients_size - 1] = malloc(sizeof(IngredientCount));
-    if ((*ingredients)[*ingredients_size - 1] == NULL) {
-        printf("Erro ao alocar memória para o ingrediente!\n");
-        return -1;
-    }
-    
-    (*ingredients)[*ingredients_size - 1]->value = strdup(ingredient);
-    (*ingredients)[*ingredients_size - 1]->count = 1;
+    *ingredients = temp;
 
-    return 0;
+    // Alocar memória para o novo elemento
+    (*ingredients)[*ingredients_size] = malloc(sizeof(IngredientCount));
+    if ((*ingredients)[*ingredients_size] == NULL) {
+        printf("Erro ao alocar memória para o ingrediente!\n");
+        return -1; // Falha ao alocar memória
+    }
+
+    // Copiar a string do ingrediente
+    (*ingredients)[*ingredients_size]->value = strdup(ingredient);
+    if ((*ingredients)[*ingredients_size]->value == NULL) {
+        printf("Erro ao duplicar string!\n");
+        free((*ingredients)[*ingredients_size]);
+        return -1; // Falha ao duplicar string
+    }
+
+    // Inicializar o contador
+    (*ingredients)[*ingredients_size]->count = 1;
+
+    // Incrementar o tamanho da lista
+    (*ingredients_size)++;
+
+    return 0; // Ingrediente adicionado com sucesso
 }
+
 
 void remove_quotes_and_brackets(char *str) {
     char *src = str;
