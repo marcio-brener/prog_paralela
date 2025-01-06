@@ -4,18 +4,25 @@
 int main(int argc, char *argv[]) {
     int rank, size;
     long chunk_size, start_offset, end_offset;
-    int ingredients_size ;
+    size_t ingredients_size = 0;
+    size_t allocated_size = 100; // Alocação inicial para 100 ingredientes
     MPI_Offset file_size;
     MPI_File file;
     MPI_Status status;
-    IngredientCount **ingredients = malloc(0);
- 
+
+    // Inicializa a lista de ingredientes
+    IngredientCount **ingredients = malloc(allocated_size * sizeof(IngredientCount *));
+    if (ingredients == NULL) {
+        printf("Erro ao alocar memória para ingredientes!\n");
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
+
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+    // Abre o arquivo MPI
     MPI_File_open(MPI_COMM_WORLD, filename, MPI_MODE_RDONLY, MPI_INFO_NULL, &file);
-
     if (!file) {
         printf("Erro ao abrir o arquivo de receitas.\n");
         MPI_Abort(MPI_COMM_WORLD, 1);
@@ -28,29 +35,41 @@ int main(int argc, char *argv[]) {
     end_offset = (rank == size - 1) ? file_size : start_offset + chunk_size;
 
     char *buffer = malloc(chunk_size + 1);
+    if (buffer == NULL) {
+        printf("Erro ao alocar memória para o buffer.\n");
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
 
     MPI_File_read_at(file, start_offset, buffer, end_offset - start_offset, MPI_CHAR, &status);
     buffer[end_offset - start_offset] = '\0';
 
-     extract_ingredients(buffer, &ingredients, &ingredients_size);
+    // Processa os ingredientes linha por linha
+    char *line = strtok(buffer, "\n");
+    while (line != NULL) {
+        // Chama extract_ingredients para processar os ingredientes da linha
+        extract_ingredients(line, &ingredients, &ingredients_size, &allocated_size);
+        line = strtok(NULL, "\n");
+    }
 
-/*    MPI_Barrier(MPI_COMM_WORLD);
+
+    MPI_Barrier(MPI_COMM_WORLD);
 
     if (rank == 0) {
+        // Ordena os ingredientes e imprime os maiores
         sort_ingredients(ingredients, ingredients_size);
         printf("\nIngredientes após a ordenação:\n");
         print_biggest_three_ingredients(ingredients);
     }
 
+    // Libera recursos
     free(buffer);
-
     MPI_File_close(&file);
 
-    for (int i = 0; i < ingredients_size; i++) {
+    for (size_t i = 0; i < ingredients_size; i++) {
         free(ingredients[i]->value);
         free(ingredients[i]);
     }
-    free(ingredients); */
+    free(ingredients);
 
     MPI_Finalize();
     return 0;

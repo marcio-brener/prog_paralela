@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     int rank, size;
     FILE *file;
     const char *filename = "test_dataset02.csv";
-    const char *ingredient = "vanila";
+    const char *ingredient = "milk";
     int total_lines = 0;
     int lines_per_process, start_line, end_line;
     int local_count = 0, global_count = 0;
